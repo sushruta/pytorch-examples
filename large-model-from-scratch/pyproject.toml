@@ -1,0 +1,67 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "large-model-from-scratch"
+version = "0.1.0"
+description = "write a large model from scratch (almost) to understand training"
+authors = [
+    {name = "Sashidhar Guntury",email = "sguntury@gmail.com"}
+]
+readme = "README.md"
+requires-python = ">3.11, <3.13"
+dependencies = [
+    "torch==2.7.1",
+    "transformers==4.53.0",
+    "rich==14.0.0",
+    "tqdm==4.66.4"
+]
+
+[project.optional-dependencies]
+dev = [
+    "ruff",
+    "mypy",
+    "black"
+]
+
+# not used by the way
+[project.scripts]
+start-training = "train:main"
+
+[tool.mypy]
+packages = "src, main, tests"
+mypy_path = "$MYPY_CONFIG_FILE_DIR/stubs"
+check_untyped_defs = "True"
+disallow_any_unimported = "True"
+no_implicit_optional = "True"
+show_error_codes = "True"
+warn_redundant_casts = "True"
+warn_return_any = "True"
+warn_unused_ignores = "True"
+
+[tool.black]
+line-length = 100
+
+[tool.ruff]
+lint.select = ["D", "E", "F", "T", "PT", "UP", "I001", "RET"]
+lint.extend-ignore = ["D10", "T201"]
+line-length = 100
+target-version = "py312"
+extend-exclude = [
+    "stubs",
+]
+
+[tool.ruff.lint.pydocstyle]
+convention = "pep257"
+
+[tool.hatch.build.targets.wheel]
+packages = [
+    "dataloader.py",
+    "dataset.py",
+    "env.py",
+    "model.py",
+    "profiler.py",
+    "train.py",
+    "workload.py"
+]
