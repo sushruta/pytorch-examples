@@ -1,7 +1,7 @@
 import torch
 
 def my_softmax(u: torch.Tensor, dim: int = -1):
-    u_max = torch.max(u, dim=dim, keepdim=True)
+    u_max = torch.max(u, dim=dim, keepdim=True).values # to get the value ughh
     exp_u = torch.exp(u - u_max)
     sum_exp_u = torch.sum(exp_u, dim=dim, keepdim=True)
     return exp_u / sum_exp_u
@@ -11,8 +11,11 @@ def compute_attention(q: torch.Tensor, k: torch.Tensor, v: torch.Tensor):
     qkt = torch.matmul(q, torch.transpose(k, -2, -1)) # resulting size is [B, H, S, S]
     qkt = qkt / (q.shape[-1] ** 0.5) # divide by sqrt(D)
     qkt = my_softmax(qkt) # size continues to be [B, H, S, S]
+    # torch.sum(qkt, dim=-1) should give us a matrix full of 1.0 at this stage
     # at this point, we have the attn_matrix in qkt
     return torch.matmul(qkt, v) # return a matrix of size [B, H, S, D]
+
+batch_size, num_heads, seq_len, head_dim = 4, 32, 128, 64
 
 qkv = torch.randn(3, batch_size, num_heads, seq_len, head_dim)
 # we generated qkv in one shot. The size of the matrix will be [3, B, H, S, D]
