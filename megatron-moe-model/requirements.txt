@@ -1,4 +1,5 @@
-torch>=2.1.0
+--extra-index-url https://download.pytorch.org/whl/cu129
+torch==2.9.0
 numpy>=1.24.0
 pyyaml>=6.0
-triton>=2.1.0; platform_system == "Linux"
+triton>=2.1.0
